@@ -8,6 +8,7 @@ from bot.handlers.commands import commands_router
 from bot.handlers.sender import check_and_notify
 from config import client, bot
 
+"""ЗАМЕНИТЬ ТОКЕН БОТА"""
 
 async def main():
     logging.basicConfig(level=logging.INFO)

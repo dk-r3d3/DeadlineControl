@@ -80,11 +80,18 @@ class Database:
     def delete_event(self, user_id, event_name):
         """Удалить событие пользователя"""
         try:
+            cursor = self.conn.execute('''
+            SELECT event_name FROM events WHERE user_id=? AND event_name=?;
+            ''', (user_id, event_name,))
+            if not cursor.fetchone():
+                logger.info(f"Событие {event_name} не найдено")
+                return False
             self.conn.execute('''
             DELETE FROM events WHERE user_id=? AND event_name=?
             ''', (user_id, event_name))
             self.conn.commit()
             logger.info(f"Событие {event_name} удалено")
+            return True
         except Exception as e:
             logger.info(f"Ошибка удаления события {event_name}\nError: {e}")
 

@@ -19,12 +19,12 @@ async def send_notification(bot: Bot, user_id: int, event):
     """Отправляемое уведомление"""
     event_name, event_date, description, event_at, period = event
     text = (
-        f"\u23F0 Напоминание о событии!\n"
-        f"<b>Название:</b> {event_name}\n"
-        f"<b>Дата:</b> {event_date}\n"
-        f"<b>Описание:</b> {description}\n"
-        f"<b>Период:</b> {period_remain(period)}\n"
-        f"<b>Осталось:</b> {display_period(period, event_date)}"
+        f"\u23F0 <b>Напоминание о событии!</b>\n"
+        f"<b>📌    {event_name}    </b> \n"
+        f"📅 <b>Дата:</b> {event_date}\n"
+        f"📝 <b>Описание:</b> {description}\n"
+        f"🔄 <b>Период:</b> {period_remain(period)}\n"
+        f"⏳ <b>Осталось:</b> {display_period(period, event_date)}"
     )
     await bot.send_message(user_id, text, reply_markup=main_menu_keyboard(), parse_mode="HTML")
 

@@ -68,3 +68,16 @@ def period_remain(period):
         return "Ежемесячно"
     elif period == 'on_the_date':
         return "В день события"
+
+
+def menu(events):
+    events_text = "\n\n".join(
+        f"📌 <b>{e[0]}</b>\n"
+        f"📅 Дата: {e[1]}\n"
+        f"📝 Описание: {e[2]}\n"
+        f"⏳ Создано: {period_remain(e[3])}\n"
+        f"🔄 Период: {e[4]}\n"
+        f"___________________________"
+        for e in events
+    )
+    return events_text

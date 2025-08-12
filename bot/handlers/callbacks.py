@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 
 from bot.database.database import Database
 from bot.form import Form
-from bot.handlers.support import date_validation
+from bot.handlers.support import date_validation, menu
 from bot.keyboards import cancel, menu_period, main_menu_keyboard
 from bot.handlers.deadline import DeadLine
 
@@ -64,12 +64,7 @@ async def process_add_deadline_period(cb: CallbackQuery, state: FSMContext):
     await cb.message.answer("Событие добавлено!")
 
     events = db.get_events(user_id)
-    events_text = "\n\n".join(
-        f"Название: {e[0]}\nДата: {e[1]}\nОписание: {e[2]}\nСоздано: {e[3]}\nПериод: {e[4]}"
-        for e in events
-    )
-    print(events)
-    await cb.message.answer(f"Сохраненные события:\n{events_text}\n"
+    await cb.message.answer(f"Сохраненные события:\n{menu(events)}\n"
                             f"\nВведи дату, укажи событие и задай частоту оповещений(обратный отсчет).\n",
                             reply_markup=main_menu_keyboard())
     await state.clear()
@@ -86,14 +81,14 @@ async def delete_deadline(cb: CallbackQuery, state: FSMContext):
 async def process_delete_deadline(message: Message, state: FSMContext):
     user_id = message.from_user.id
     event = message.text
-    db.delete_event(user_id, event)
-    await message.answer("Событие удалено!")
+
+    if db.delete_event(user_id, event):
+        await message.answer("Событие удалено!")
+    else:
+        await message.answer("Данного события не существует, попробуй еще раз")
+
     events = db.get_events(user_id)
-    events_text = "\n\n".join(
-        f"Название: {e[0]}\nДата: {e[1]}\nОписание: {e[2]}\nСоздано: {e[3]}\nПериод: {e[4]}"
-        for e in events
-    )
-    await message.answer(f"Сохраненные события:\n{events_text}\n"
+    await message.answer(f"Сохраненные события:\n{menu(events)}\n"
                          f"\nВведи дату, укажи событие и задай частоту оповещений(обратный отсчет).\n",
                          reply_markup=main_menu_keyboard())
     await state.clear()
